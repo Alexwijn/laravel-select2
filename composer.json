@@ -1,0 +1,54 @@
+
+{
+  "name": "alexwijn/laravel-select2",
+  "description": "jQuery Select2 API for Laravel 5",
+  "keywords": [
+    "laravel",
+    "select2",
+    "jquery"
+  ],
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Alex Wijnholds",
+      "email": "info@asclub.eu"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "illuminate/http": "5.4.*|5.5.*|5.6.*|5.7.*",
+    "illuminate/view": "5.4.*|5.5.*|5.6.*|5.7.*",
+    "illuminate/support": "5.4.*|5.5.*|5.6.*|5.7.*",
+    "illuminate/database": "5.4.*|5.5.*|5.6.*|5.7.*",
+    "illuminate/filesystem": "5.4.*|5.5.*|5.6.*|5.7.*",
+  },
+  "require-dev": {
+    "orchestra/testbench": "~3.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Alexwijn\\Select2\\": "src/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Alexwijn\\Select2\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.1-dev"
+    },
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

@@ -15,7 +15,7 @@
     }
   ],
   "require": {
-    "php": ">=7.0",
+    "php": "^7.1",
     "illuminate/http": "5.4.*|5.5.*|5.6.*|5.7.*",
     "illuminate/view": "5.4.*|5.5.*|5.6.*|5.7.*",
     "illuminate/support": "5.4.*|5.5.*|5.6.*|5.7.*",
@@ -30,7 +30,7 @@
       "Alexwijn\\Select2\\": "src/"
     },
     "files": [
-      "src/helpers.php"
+      "helpers.php"
     ]
   },
   "autoload-dev": {
@@ -41,6 +41,11 @@
   "extra": {
     "branch-alias": {
       "dev-master": "0.1-dev"
+    },
+    "laravel": {
+      "providers": [
+        "Alexwijn\\Select2\\Select2ServiceProvider"
+      ]
     }
   },
   "config": {

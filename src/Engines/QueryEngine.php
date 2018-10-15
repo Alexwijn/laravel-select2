@@ -51,9 +51,7 @@ class QueryEngine extends Engine
         try {
             $this->prepareQuery();
 
-            return $this->render(
-                $this->results()->toArray()
-            );
+            return $this->render($this->results()->toArray());
         } catch (\Exception $exception) {
             return $this->errorResponse($exception);
         }
@@ -82,7 +80,7 @@ class QueryEngine extends Engine
     }
 
     /**
-     * Prepare query by executing count, filter, order and paginate.
+     * Prepare query by executing count and paginate.
      */
     protected function prepareQuery(): QueryEngine
     {
@@ -93,6 +91,11 @@ class QueryEngine extends Engine
         return $this;
     }
 
+    /**
+     * Prepare the count query.
+     *
+     * @return \Illuminate\Database\Query\Builder
+     */
     protected function prepareCountQuery()
     {
         $builder = clone $this->query;
@@ -157,11 +160,19 @@ class QueryEngine extends Engine
             ],
         ];
 
+        if ($this->jsonHeaders === null) {
+            $this->jsonHeaders = config('select2.json.headers', []);
+        }
+
+        if ($this->jsonOptions === null) {
+            $this->jsonOptions = config('select2.json.options', 0);
+        }
+
         return new JsonResponse(
             $output,
             200,
-            config('select2.json.header', []),
-            config('select2.json.options', 0)
+            $this->jsonHeaders,
+            $this->jsonOptions
         );
     }
 }

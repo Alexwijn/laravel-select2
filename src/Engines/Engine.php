@@ -19,7 +19,7 @@ abstract class Engine implements EngineContract
      *
      * @var \Illuminate\Http\Request
      */
-    public $request;
+    protected $request;
 
     /**
      * Array of result columns/fields.
@@ -27,6 +27,20 @@ abstract class Engine implements EngineContract
      * @var array
      */
     protected $columns = [];
+
+    /**
+     * Json options when rendering.
+     *
+     * @var int
+     */
+    protected $jsonOptions;
+
+    /**
+     * Additional Json headers when rendering.
+     *
+     * @var int
+     */
+    protected $jsonHeaders;
 
     /**
      * Total records.
@@ -41,26 +55,22 @@ abstract class Engine implements EngineContract
         return new static($source);
     }
 
-    /**
-     * Convert instance to array.
-     *
-     * @return array
-     */
+    /** {@inheritdoc} */
     public function toArray(): array
     {
         return $this->make()->getData(true);
     }
 
-    /**
-     * Convert the object to its JSON representation.
-     *
-     * @param  int $options
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function toJson($options = 0): JsonResponse
+
+    /** {@inheritdoc} */
+    public function toJson(array $headers = null, $options = 0): JsonResponse
     {
+        if ($headers) {
+            $this->jsonHeaders = $headers;
+        }
+
         if ($options) {
-            config('select2.json.options', $options);
+            $this->jsonOptions = $options;
         }
 
         return $this->make();

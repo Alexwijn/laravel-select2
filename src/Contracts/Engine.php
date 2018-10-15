@@ -39,4 +39,20 @@ interface Engine
      * @return \Illuminate\Support\Collection
      */
     public function results(): Collection;
+
+    /**
+     * Convert the object to its JSON representation.
+     *
+     * @param  array|null $headers
+     * @param  int       $options
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function toJson(array $headers = null, $options = 0): JsonResponse;
+
+    /**
+     * Convert instance to array.
+     *
+     * @return array
+     */
+    public function toArray(): array;
 }

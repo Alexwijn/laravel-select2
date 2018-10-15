@@ -1,8 +1,4 @@
 <?php
-/**
- * @copyright Copyright (c) 2018, POS4RESTAURANTS BV. All rights reserved.
- * @internal  Unauthorized copying of this file, via any medium is strictly prohibited.
- */
 
 namespace Alexwijn\Select2\Engines;
 
@@ -49,6 +45,16 @@ abstract class Engine implements EngineContract
      */
     protected $totalRecords = 0;
 
+    /**
+     * @var string
+     */
+    protected $value = 'id';
+
+    /**
+     * @var string
+     */
+    protected $label = 'text';
+
     /** {@inheritdoc} */
     public static function create($source): EngineContract
     {
@@ -56,11 +62,26 @@ abstract class Engine implements EngineContract
     }
 
     /** {@inheritdoc} */
+    public function value(string $field): EngineContract
+    {
+        $this->value = $field;
+
+        return $this;
+    }
+
+    /** {@inheritdoc} */
+    public function label(string $field): EngineContract
+    {
+        $this->label = $field;
+
+        return $this;
+    }
+
+    /** {@inheritdoc} */
     public function toArray(): array
     {
         return $this->make()->getData(true);
     }
-
 
     /** {@inheritdoc} */
     public function toJson(array $headers = null, $options = 0): JsonResponse
@@ -77,6 +98,40 @@ abstract class Engine implements EngineContract
     }
 
     /**
+     * Render json response.
+     *
+     * @param array $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function render(array $data): JsonResponse
+    {
+        $currentPage = $this->request->get('page', 1);
+        $totalPages = ceil($currentPage / 15);
+
+        $output = [
+            'results' => $data,
+            'paginate' => [
+                'hasMore' => $currentPage > $totalPages && $currentPage < $totalPages
+            ],
+        ];
+
+        if ($this->jsonHeaders === null) {
+            $this->jsonHeaders = config('select2.json.headers', []);
+        }
+
+        if ($this->jsonOptions === null) {
+            $this->jsonOptions = config('select2.json.options', 0);
+        }
+
+        return new JsonResponse(
+            $output,
+            200,
+            $this->jsonHeaders,
+            $this->jsonOptions
+        );
+    }
+
+    /**
      * Return an error json response.
      *
      * @param \Exception $exception
@@ -89,5 +144,21 @@ abstract class Engine implements EngineContract
             'pagination' => ['hasMore' => false],
             'error' => "Exception Message:\n\n" . $exception->getMessage(),
         ]);
+    }
+
+    /**
+     * Transform the data into a valid select2 response.
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function transform(array $data): array
+    {
+        return array_map(function ($row) {
+            return [
+                'id' => data_get($row, $this->value),
+                'text' => data_get($row, $this->label)
+            ];
+        }, $data);
     }
 }

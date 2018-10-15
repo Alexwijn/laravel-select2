@@ -1,8 +1,4 @@
 <?php
-/**
- * @copyright Copyright (c) 2018, POS4RESTAURANTS BV. All rights reserved.
- * @internal  Unauthorized copying of this file, via any medium is strictly prohibited.
- */
 
 namespace Alexwijn\Select2\Engines;
 

@@ -6,11 +6,12 @@ if (!function_exists('select2')) {
      * Or return the factory if source is not set.
      *
      * @param mixed $source
-     * @return \Alexwijn\Select\Select2Abstract|\Alexwijn\Select\Select
+     * @return \Alexwijn\Select2\Engines\Engine|\Alexwijn\Select2\Dropdown
+     * @throws \Alexwijn\Select2\Exceptions\EngineNotFound
      */
     function select2($source = null)
     {
-        if (is_null($source)) {
+        if ($source === null) {
             return app('select2');
         }
 

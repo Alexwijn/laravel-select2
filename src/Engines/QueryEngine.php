@@ -51,7 +51,9 @@ class QueryEngine extends Engine
         try {
             $this->prepareQuery();
 
-            return $this->render($this->results()->toArray());
+            return $this->render(
+                $this->transform($this->results()->toArray())
+            );
         } catch (\Exception $exception) {
             return $this->errorResponse($exception);
         }
@@ -140,39 +142,5 @@ class QueryEngine extends Engine
         $this->query->forPage($this->request->get('page', 1), 15);
 
         return $this;
-    }
-
-    /**
-     * Render json response.
-     *
-     * @param array $data
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function render(array $data): JsonResponse
-    {
-        $currentPage = $this->request->get('page', 1);
-        $totalPages = ceil($currentPage / 15);
-
-        $output = [
-            'results' => $data,
-            'paginate' => [
-                'hasMore' => $currentPage > $totalPages && $currentPage < $totalPages
-            ],
-        ];
-
-        if ($this->jsonHeaders === null) {
-            $this->jsonHeaders = config('select2.json.headers', []);
-        }
-
-        if ($this->jsonOptions === null) {
-            $this->jsonOptions = config('select2.json.options', 0);
-        }
-
-        return new JsonResponse(
-            $output,
-            200,
-            $this->jsonHeaders,
-            $this->jsonOptions
-        );
     }
 }

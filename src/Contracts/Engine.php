@@ -41,10 +41,26 @@ interface Engine
     public function results(): Collection;
 
     /**
+     * Change the default field for rendering the value.
+     *
+     * @param string $field
+     * @return mixed
+     */
+    public function value(string $field): Engine;
+
+    /**
+     * Change the default field for rendering the label.
+     *
+     * @param string $field
+     * @return mixed
+     */
+    public function label(string $field): Engine;
+
+    /**
      * Convert the object to its JSON representation.
      *
      * @param  array|null $headers
-     * @param  int       $options
+     * @param  int        $options
      * @return \Illuminate\Http\JsonResponse
      */
     public function toJson(array $headers = null, $options = 0): JsonResponse;

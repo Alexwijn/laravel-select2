@@ -60,7 +60,7 @@ abstract class Engine implements EngineContract
     public function toJson($options = 0): JsonResponse
     {
         if ($options) {
-            config('datatables.json.options', $options);
+            config('select2.json.options', $options);
         }
 
         return $this->make();

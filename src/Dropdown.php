@@ -45,11 +45,11 @@ class Dropdown
      */
     public function request(): Request
     {
-        return $this->request ?: $this->request = resolve('datatables.request');
+        return $this->request ?: $this->request = resolve('select2.request');
     }
 
     /**
-     * Get DataTables Html Builder instance.
+     * Get Select2 Html Builder instance.
      *
      * @return \Alexwijn\Select2\Html\Builder
      */

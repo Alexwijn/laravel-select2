@@ -106,12 +106,12 @@ abstract class Engine implements EngineContract
     protected function render(array $data): JsonResponse
     {
         $currentPage = $this->request->get('page', 1);
-        $totalPages = ceil($currentPage / 15);
+        $totalPages = ceil($this->totalRecords / 15);
 
         $output = [
             'results' => $data,
-            'paginate' => [
-                'hasMore' => $currentPage > $totalPages && $currentPage < $totalPages
+            'pagination' => [
+                'more' => $totalPages > $currentPage && $currentPage < $totalPages
             ],
         ];
 

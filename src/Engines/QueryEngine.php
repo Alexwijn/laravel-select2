@@ -87,6 +87,7 @@ class QueryEngine extends Engine
     protected function prepareQuery(): QueryEngine
     {
         if ($this->totalRecords = $this->count()) {
+            $this->filter();
             $this->paginate();
         }
 
@@ -142,5 +143,44 @@ class QueryEngine extends Engine
         $this->query->forPage($this->request->get('page', 1), 15);
 
         return $this;
+    }
+
+    /**
+     * Apply filter.
+     *
+     * @return \Alexwijn\Select2\Engines\QueryEngine
+     */
+    protected function filter(): QueryEngine
+    {
+        if ($term = $this->request->get('term')) {
+            $this->regexColumnSearch($this->label, $term);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Compile regex query column search.
+     *
+     * @param mixed  $column
+     * @param string $keyword
+     */
+    protected function regexColumnSearch($column, $keyword): void
+    {
+        switch ($this->connection->getDriverName()) {
+            case 'oracle':
+                $sql = 'REGEXP_LIKE( LOWER(' . $column . ') , ?, \'i\' )';
+                break;
+
+            case 'pgsql':
+                $sql = $column . ' ~* ? ';
+                break;
+
+            default:
+                $sql = 'LOWER(' . $column . ') REGEXP ?';
+                $keyword = Str::lower($keyword);
+        }
+
+        $this->query->whereRaw($sql, [$keyword]);
     }
 }

@@ -11,14 +11,14 @@ use Illuminate\Http\Request;
 class Dropdown
 {
     /**
-     * @var \Illuminate\Http\Request
-     */
-    protected $request;
-
-    /**
      * @var \Alexwijn\Select2\Html\Builder
      */
-    protected $htmlBuilder;
+    private $htmlBuilder;
+
+    /**
+     * @var \Illuminate\Http\Request
+     */
+    private $request;
 
     /**
      * Display ajax response.
@@ -45,7 +45,7 @@ class Dropdown
      */
     public function request(): Request
     {
-        return $this->request ?: $this->request = resolve('select2.request');
+        return $this->request ?: $this->request = resolve('request');
     }
 
     /**

@@ -57,6 +57,14 @@ interface Engine
     public function label(string $field): Engine;
 
     /**
+     * Assign a grouped field.
+     *
+     * @param string $field
+     * @return mixed
+     */
+    public function group(string $field): Engine;
+
+    /**
      * Convert the object to its JSON representation.
      *
      * @param  array|null $headers

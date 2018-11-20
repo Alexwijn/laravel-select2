@@ -4,6 +4,7 @@ namespace Alexwijn\Select2\Engines;
 
 use Alexwijn\Select2\Contracts\Engine as EngineContract;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 
 /**
  * Alexwijn\Select2\DropDown
@@ -55,6 +56,11 @@ abstract class Engine implements EngineContract
      */
     protected $label = 'text';
 
+    /**
+     * @var string
+     */
+    protected $group;
+
     /** {@inheritdoc} */
     public static function create($source): EngineContract
     {
@@ -73,6 +79,14 @@ abstract class Engine implements EngineContract
     public function label(string $field): EngineContract
     {
         $this->label = $field;
+
+        return $this;
+    }
+
+    /** {@inheritdoc} */
+    public function group(string $field): EngineContract
+    {
+        $this->group = $field;
 
         return $this;
     }
@@ -111,7 +125,7 @@ abstract class Engine implements EngineContract
         $output = [
             'results' => $data,
             'pagination' => [
-                'more' => $totalPages > $currentPage && $currentPage < $totalPages
+                'more' => $totalPages > $currentPage && $currentPage < $totalPages,
             ],
         ];
 
@@ -152,13 +166,27 @@ abstract class Engine implements EngineContract
      * @param array $data
      * @return array
      */
-    protected function transform(array $data): array
+    protected function transform(Collection $data): array
     {
-        return array_map(function ($row) {
+        if ($this->group !== null) {
+            return $data->groupBy($this->group)->map(function (Collection $rows, string $label) {
+                return [
+                    'text' => $label ?: __('None'),
+                    'children' => $this->collapse($rows),
+                ];
+            })->values()->toArray();
+        }
+
+        return $this->collapse($data)->toArray();
+    }
+
+    protected function collapse(Collection $data): Collection
+    {
+        return $data->map(function ($row) {
             return [
                 'id' => data_get($row, $this->value),
-                'text' => data_get($row, $this->label)
+                'text' => data_get($row, $this->label),
             ];
-        }, $data);
+        });
     }
 }

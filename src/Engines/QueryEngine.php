@@ -52,7 +52,7 @@ class QueryEngine extends Engine
             $this->prepareQuery();
 
             return $this->render(
-                $this->transform($this->results()->toArray())
+                $this->transform($this->results())
             );
         } catch (\Exception $exception) {
             return $this->errorResponse($exception);

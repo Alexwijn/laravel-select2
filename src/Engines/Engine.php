@@ -183,10 +183,14 @@ abstract class Engine implements EngineContract
     protected function collapse(Collection $data): Collection
     {
         return $data->map(function ($row) {
-            return [
+            if ($row instanceof Arrayable) {
+                $row = $row->toArray();
+            }
+
+            return array_merge($row, [
                 'id' => data_get($row, $this->value),
                 'text' => data_get($row, $this->label),
-            ];
+            ]);
         });
     }
 }

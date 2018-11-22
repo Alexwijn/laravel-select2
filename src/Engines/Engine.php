@@ -3,6 +3,7 @@
 namespace Alexwijn\Select2\Engines;
 
 use Alexwijn\Select2\Contracts\Engine as EngineContract;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 

@@ -65,6 +65,14 @@ interface Engine
     public function group(string $field): Engine;
 
     /**
+     * Override the fields that will be used when searching.
+     *
+     * @param array $fields
+     * @return \Alexwijn\Select2\Contracts\Engine
+     */
+    public function search(...$fields): Engine;
+
+    /**
      * Convert the object to its JSON representation.
      *
      * @param  array|null $headers

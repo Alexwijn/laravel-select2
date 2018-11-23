@@ -153,7 +153,12 @@ class QueryEngine extends Engine
     protected function filter(): QueryEngine
     {
         if ($term = $this->request->get('term')) {
-            $this->regexColumnSearch($this->label, $term);
+            $fields = $this->search ?: [$this->label];
+            $this->query->where(function ($query) use ($fields, $term) {
+                foreach ($fields as $field) {
+                    $this->regexColumnSearch($query, $field, $term);
+                }
+            });
         }
 
         return $this;
@@ -162,10 +167,11 @@ class QueryEngine extends Engine
     /**
      * Compile regex query column search.
      *
-     * @param mixed  $column
-     * @param string $keyword
+     * @param Builder $query
+     * @param mixed   $column
+     * @param string  $keyword
      */
-    protected function regexColumnSearch($column, $keyword): void
+    protected function regexColumnSearch($query, $column, $keyword): void
     {
         switch ($this->connection->getDriverName()) {
             case 'oracle':
@@ -181,6 +187,6 @@ class QueryEngine extends Engine
                 $keyword = Str::lower($keyword);
         }
 
-        $this->query->whereRaw($sql, [$keyword]);
+        $query->orWhereRaw($sql, [$keyword]);
     }
 }

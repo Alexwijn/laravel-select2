@@ -62,6 +62,9 @@ abstract class Engine implements EngineContract
      */
     protected $group;
 
+    /** @var array */
+    protected $search;
+
     /** {@inheritdoc} */
     public static function create($source): EngineContract
     {
@@ -88,6 +91,18 @@ abstract class Engine implements EngineContract
     public function group(string $field): EngineContract
     {
         $this->group = $field;
+
+        return $this;
+    }
+
+    /** {@inheritdoc} */
+    public function search(...$fields): EngineContract
+    {
+        // Make sure we have arrays
+        $fields = array_map('array_wrap', $fields);
+
+        // Merge everything together
+        $this->search = array_merge(...$fields);
 
         return $this;
     }

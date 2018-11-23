@@ -179,7 +179,7 @@ abstract class Engine implements EngineContract
     /**
      * Transform the data into a valid select2 response.
      *
-     * @param array $data
+     * @param \Illuminate\Support\Collection $data
      * @return array
      */
     protected function transform(Collection $data): array
@@ -196,6 +196,12 @@ abstract class Engine implements EngineContract
         return $this->collapse($data)->toArray();
     }
 
+    /**
+     * Transform the data into a valid select2 row.
+     *
+     * @param \Illuminate\Support\Collection $data
+     * @return \Illuminate\Support\Collection
+     */
     protected function collapse(Collection $data): Collection
     {
         return $data->map(function ($row) {
